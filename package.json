@@ -1,0 +1,18 @@
+{
+  "name": "michaelbui99-discount-alerter",
+  "version": "0.1.0",
+  "description": "Discount Alerter",
+  "main": "index.js",
+  "private": "true",
+  "scripts": {
+    "build": "npm run build-packages && npm run buld --workspace=apps",
+    "build-packages": "npm run build --workspace=packages",
+    "clean-packages": "npm run clean --workspace=packages"
+  },
+  "workspaces":[
+    "packages/*",
+    "apps/*"
+  ],
+  "author": "Michael Bui (github.com/michaelbui99)",
+  "license": "MIT"
+}
