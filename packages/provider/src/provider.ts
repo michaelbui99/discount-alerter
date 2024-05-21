@@ -3,6 +3,8 @@ import { Discount } from '@michaelbui99-discount-alerter/models';
 const PROVIDER_SYMBOL = Symbol.for('michaelbui99-discount-alerter/Provider');
 
 export type ProviderConfiguration = Map<string, any>;
+
+// TODO: Rethink abstraction to account for discounts from online stores.
 export abstract class Provider {
     protected readonly id: string;
     protected readonly name: string;
@@ -22,7 +24,7 @@ export abstract class Provider {
         return x !== null && typeof x === 'object' && PROVIDER_SYMBOL in x;
     }
 
-    public abstract async getDiscounts(): Promise<Discount[]>;
+    public abstract getDiscounts(): Promise<Discount[]>;
     public configure(f: (config: ProviderConfiguration) => void) {
         f(this.config);
     }
