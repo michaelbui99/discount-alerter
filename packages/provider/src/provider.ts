@@ -25,7 +25,15 @@ export abstract class Provider {
     }
 
     public abstract getDiscounts(): Promise<Discount[]>;
-    public configure(f: (config: ProviderConfiguration) => void) {
-        f(this.config);
+    public abstract init(config: ProviderConfiguration): void;
+
+    public getId(): string {
+        return this.id;
+    }
+    public getVersion(): string {
+        return this.version;
+    }
+    public getName(): string {
+        return this.name;
     }
 }

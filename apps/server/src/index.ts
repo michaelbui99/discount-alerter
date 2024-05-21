@@ -1,1 +1,26 @@
+import { ProviderLoader } from '@michaelbui99-discount-alerter/provider';
+import path from 'path';
+
 console.log('Hello world!');
+
+const loader = new ProviderLoader();
+// loader.loadDirectory(path.join(__dirname, '..', '..', '..', '..'));
+console.log(path.join(__dirname, '..', '..', '..', 'packages', 'provider', ''));
+
+const test = async () => {
+    const providerPath = path.join(
+        __dirname,
+        '..',
+        '..',
+        '..',
+        'packages',
+        'salling-provider',
+        'src',
+    );
+
+    loader.registerProviderDir(providerPath);
+    const providers = await loader.load();
+    console.log('PROVIDERS', providers);
+};
+
+test();
