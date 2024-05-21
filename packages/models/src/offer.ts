@@ -1,7 +1,7 @@
 export interface Offer {
     description: string;
     currency: string;
-    amount: number;
+    discountAmount: number;
     ean?: string;
     startTime?: Date;
     endTime?: Date;

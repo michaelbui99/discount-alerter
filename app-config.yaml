@@ -1,0 +1,13 @@
+providers:
+    configurations:
+        - id: '@michaelbui99-discount-alerter/salling-provider'
+          config:
+              AUTH_TOKEN: TOKEN
+              STORE_IDS:
+                  - ID1
+                  - ID2
+server:
+    port: 8080
+
+tracker:
+    trackSchedule: '*/30 * * * *'

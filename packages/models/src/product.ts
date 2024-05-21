@@ -1,6 +1,7 @@
 export interface Product {
- ean: string;
- description?: string;
- name?: string;
-image?: string;
+    ean: string;
+    description?: string;
+    name?: string;
+    image?: string;
+    categories: string[];
 }
