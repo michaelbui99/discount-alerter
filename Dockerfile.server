@@ -1,0 +1,14 @@
+FROM node:20.10.0 as build
+WORKDIR /build
+COPY apps /build/apps
+COPY packages /build/packages
+COPY ./package*.json /build/
+RUN npm ci
+RUN npm run build
+
+FROM node:20.10.0 
+WORKDIR /app
+COPY --from=build /build/node_modules /app/node_modules
+COPY --from=build /build/apps/server/dist /app/dist
+ENTRYPOINT [ "node" ]
+CMD [ "/app/dist/index.js" ]
