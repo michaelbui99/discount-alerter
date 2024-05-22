@@ -29,8 +29,9 @@ export class ProviderLoader {
         return this;
     }
 
-    public registerProviderDir(dirPath: string) {
+    public registerProviderDir(dirPath: string): ProviderLoader {
         this.providerDirs.push(path.resolve(dirPath));
+        return this;
     }
 
     public async load(): Promise<Provider[]> {

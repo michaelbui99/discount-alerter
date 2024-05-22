@@ -1,4 +1,5 @@
 import { ProviderLoader } from '@michaelbui99-discount-alerter/provider';
+import sallingProvider from '@michaelbui99-discount-alerter/salling-provider';
 import path from 'path';
 
 console.log('Hello world!');
@@ -18,8 +19,7 @@ const test = async () => {
         'src',
     );
 
-    loader.registerProviderDir(providerPath);
-    const providers = await loader.load();
+    const providers = await loader.registerProviderDir(providerPath).load();
     console.log('PROVIDERS', providers);
 };
 
