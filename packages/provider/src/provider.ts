@@ -1,21 +1,20 @@
-import { Discount } from '@michaelbui99-discount-alerter/models';
+import {
+    Discount,
+    ProviderConfiguration,
+} from '@michaelbui99-discount-alerter/models';
 
 const PROVIDER_SYMBOL = Symbol.for('michaelbui99-discount-alerter/Provider');
-
-export type ProviderConfiguration = Map<string, any>;
 
 // TODO: Rethink abstraction to account for discounts from online stores.
 export abstract class Provider {
     protected readonly id: string;
     protected readonly name: string;
     protected readonly version: string;
-    protected config: ProviderConfiguration;
 
     constructor(id: string, name: string, version: string) {
         this.id = id;
         this.name = name;
         this.version = version;
-        this.config = new Map<string, any>();
 
         Object.defineProperty(this, PROVIDER_SYMBOL, { value: true });
     }

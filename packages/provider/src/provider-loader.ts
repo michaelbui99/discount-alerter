@@ -1,15 +1,30 @@
 import path from 'path';
 import fs from 'fs';
 import { Provider } from './provider';
+import { ProviderConfiguration } from '@michaelbui99-discount-alerter/models';
 
 export class ProviderLoader {
     private providerDirs: string[];
     private providers: Provider[];
     private providerIdMap: any = {};
+    private configurations: ProviderConfiguration[];
+    private configMap: Map<string, ProviderConfiguration>;
 
-    constructor() {
+    constructor(configurations: ProviderConfiguration[]) {
         this.providerDirs = [];
         this.providers = [];
+        this.configurations = configurations;
+
+        this.configMap = new Map<string, ProviderConfiguration>();
+        this.configurations.forEach((config) => {
+            if (this.configMap.has(config.id)) {
+                throw new Error(
+                    `Provider with id ${config.id} has been configured multiple times.`,
+                );
+            }
+
+            this.configMap.set(config.id, config);
+        });
     }
 
     public registerProvider(provider: Provider): ProviderLoader {
@@ -38,6 +53,20 @@ export class ProviderLoader {
         await Promise.all(
             this.providerDirs.map((dirPath) => this.loadDirectory(dirPath)),
         );
+
+        this.providers.forEach((provider) => {
+            if (!this.configMap.has(provider.getId())) {
+                console.warn(
+                    `No configurations found for provider ${provider.getId()}`,
+                );
+            }
+
+            const config = this.configMap.get(provider.getId()) ?? {
+                id: provider.getId(),
+                config: new Map<string, any>(),
+            };
+            provider.init(config);
+        });
 
         return this.providers;
     }

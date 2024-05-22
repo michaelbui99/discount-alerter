@@ -1,6 +1,11 @@
+export type ProviderConfiguration = {
+    id: string;
+    config: Map<string, any>;
+};
+
 export type ApplicationConfiguration = {
     providers: {
-        configurations: Map<string, any>[];
+        configurations: ProviderConfiguration[];
     };
     server: {
         port: number;

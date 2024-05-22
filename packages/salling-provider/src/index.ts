@@ -2,12 +2,10 @@ import {
     Discount,
     Offer,
     Product,
+    ProviderConfiguration,
     Store,
 } from '@michaelbui99-discount-alerter/models';
-import {
-    Provider,
-    ProviderConfiguration,
-} from '@michaelbui99-discount-alerter/provider';
+import { Provider } from '@michaelbui99-discount-alerter/provider';
 import {
     SallingGroupAPIClient,
     createSallingGroupAPIClient,
@@ -27,9 +25,8 @@ class SallingProvider extends Provider {
     }
 
     public init(config: ProviderConfiguration): void {
-        this.config = config;
-        this.authToken = this.config.get('AUTH_TOKEN');
-        this.stores = this.config.get('STORE_IDS');
+        this.authToken = config.config.get('AUTH_TOKEN');
+        this.stores = config.config.get('STORE_IDS');
 
         this.apiClient = createSallingGroupAPIClient(this.authToken);
     }
