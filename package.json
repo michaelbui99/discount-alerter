@@ -9,9 +9,10 @@
         "start-server": "npm run start --workspace=apps/server",
         "build": "npm run build-packages && npm run build --workspace=apps",
         "build-packages": "npm run build --workspace=packages",
+        "clean": "npm run clean-packages && npm run clean-apps",
         "clean-packages": "npm run clean --workspace=packages",
         "clean-apps": "npm run clean --workspace=apps",
-        "clean": "npm run clean-packages && npm run clean-apps"
+        "test-packages": "npm run test --workspace=packages"
     },
     "workspaces": [
         "packages/*",

@@ -6,7 +6,8 @@
     "types": "src/index.d.ts",
     "scripts": {
         "build": "tsc --build",
-        "clean": "tsc --build --clean"
+        "clean": "tsc --build --clean",
+        "test": "echo ''"
     },
     "dependencies": {
         "typescript": "^5.4.5",
