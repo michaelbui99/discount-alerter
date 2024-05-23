@@ -17,13 +17,13 @@ export class ProviderLoader {
 
         this.configMap = new Map<string, ProviderConfiguration>();
         this.configurations.forEach((config) => {
-            if (this.configMap.has(config.id)) {
+            if (this.configMap.has(config.provider)) {
                 throw new Error(
-                    `Provider with id ${config.id} has been configured multiple times.`,
+                    `Provider with id ${config.provider} has been configured multiple times.`,
                 );
             }
 
-            this.configMap.set(config.id, config);
+            this.configMap.set(config.provider, config);
         });
     }
 
@@ -62,7 +62,7 @@ export class ProviderLoader {
             }
 
             const config = this.configMap.get(provider.getId()) ?? {
-                id: provider.getId(),
+                provider: provider.getId(),
                 config: new Map<string, any>(),
             };
             provider.init(config);

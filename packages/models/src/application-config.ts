@@ -1,5 +1,5 @@
 export type ProviderConfiguration = {
-    id: string;
+    provider: string;
     config: Map<string, any>;
 };
 
