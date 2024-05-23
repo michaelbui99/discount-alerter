@@ -1,4 +1,7 @@
-const operatorMap = new Map<string, boolean>([
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.JsonExpressionScanner = exports.TokenType = void 0;
+const operatorMap = new Map([
     ['==', true],
     ['!=', true],
     ['>=', true],
@@ -8,42 +11,29 @@ const operatorMap = new Map<string, boolean>([
     ['INCLUDES', true],
     ['NOT_INCLUDES', true],
 ]);
-
-export enum TokenType {
-    BOOLEAN_LITERAL = 'BOOLEAN_LITERAL',
-    STRING_LITERAL = 'STRING_LITERAL',
-    NUMBER_LITERAL = 'NUMBER_LITERAL',
-    OPERATOR = 'OPERATOR',
-    SELECTOR = 'SELECTOR',
-}
-
-export type Token = {
-    literal: string;
-    type: TokenType;
-};
-
-export class JsonExpressionScanner {
-    private source: string;
-
-    constructor(source: string) {
+var TokenType;
+(function (TokenType) {
+    TokenType["BOOLEAN_LITERAL"] = "BOOLEAN_LITERAL";
+    TokenType["STRING_LITERAL"] = "STRING_LITERAL";
+    TokenType["NUMBER_LITERAL"] = "NUMBER_LITERAL";
+    TokenType["OPERATOR"] = "OPERATOR";
+    TokenType["SELECTOR"] = "SELECTOR";
+})(TokenType || (exports.TokenType = TokenType = {}));
+class JsonExpressionScanner {
+    constructor(source) {
         this.source = source;
     }
-
-    public scanAll(): Token[] {
-        let tokens = [] as Token[];
-
+    scanAll() {
+        let tokens = [];
         let matches = this.source
             .split(' ')
             .filter((lexeme) => lexeme !== '' && lexeme !== ' ');
-
-        // For simplicity we always assume the first matched string to be a selector
         if (matches.length > 0) {
             tokens.push({
                 literal: matches[0],
                 type: TokenType.SELECTOR,
             });
         }
-
         const remaining = matches.slice(1);
         remaining.forEach((match) => {
             if (operatorMap.has(match.trim())) {
@@ -53,7 +43,6 @@ export class JsonExpressionScanner {
                 });
                 return;
             }
-
             if (match === 'true' || match === 'false') {
                 tokens.push({
                     literal: match,
@@ -61,7 +50,6 @@ export class JsonExpressionScanner {
                 });
                 return;
             }
-
             if (this.isNumberLiteral(match)) {
                 tokens.push({
                     literal: match,
@@ -69,7 +57,6 @@ export class JsonExpressionScanner {
                 });
                 return;
             }
-
             if (this.isStringLiteral(match)) {
                 tokens.push({
                     literal: match.replaceAll("'", '').replaceAll('"', ''),
@@ -77,19 +64,15 @@ export class JsonExpressionScanner {
                 });
             }
         });
-
         return tokens;
     }
-
-    private isNumberLiteral(s: string): boolean {
+    isNumberLiteral(s) {
         return !isNaN(parseFloat(s)) && !isNaN(parseInt(s));
     }
-
-    // TODO: make more robust to account for unterminated strings. Should suffice for now, since priority is getting a MVP up and running.
-    private isStringLiteral(s: string): boolean {
-        return (
-            (s.startsWith("'") && s.endsWith("'")) ||
-            (s.startsWith('"') && s.endsWith('"'))
-        );
+    isStringLiteral(s) {
+        return ((s.startsWith("'") && s.endsWith("'")) ||
+            (s.startsWith('"') && s.endsWith('"')));
     }
 }
+exports.JsonExpressionScanner = JsonExpressionScanner;
+//# sourceMappingURL=parser.js.map

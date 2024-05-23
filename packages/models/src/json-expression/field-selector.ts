@@ -31,7 +31,7 @@ export class FieldSelector {
     public select(obj: object): SelectorResult {
         const selectorParts = this.selector.split('.');
         let selected: any = obj;
-        let result: SelectorResult;
+        let result: SelectorResult = SelectorResult.empty();
         for (let part of selectorParts) {
             if (
                 typeof selected === 'object' &&
@@ -40,7 +40,6 @@ export class FieldSelector {
                 selected = selected[part];
             } else {
                 selected = undefined;
-                result = SelectorResult.empty();
                 break;
             }
         }
