@@ -3,10 +3,10 @@ WORKDIR /app
 COPY apps /app/apps
 COPY packages /app/packages
 COPY ./package*.json /app/
-COPY app-config.yaml .discount-alerter/app-config.yaml
+COPY app-config.yaml /.discount-alerter/app-config.yaml
 RUN npm ci
 RUN npm run build
-ENV DA_CONFIG=.discount-alerter/app-config.yaml
+ENV DA_CONFIG=/.discount-alerter/app-config.yaml
 EXPOSE 8080
 ENTRYPOINT [ "node" ]
 CMD [ "/app/apps/server/dist/index.js"]
