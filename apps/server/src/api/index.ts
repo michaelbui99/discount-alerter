@@ -4,6 +4,7 @@ import { appRouter } from './routes';
 import { EnvironmentVariableReader } from '../env-reader/environment-variable-reader';
 import { Response, Request } from './typedefs';
 import { logging } from './middleware/logging';
+import { Logger } from '@michaelbui99-discount-alerter/models';
 
 const envReader = new EnvironmentVariableReader();
 const app = express();
@@ -22,14 +23,15 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 export const startApiServer = async () => {
+    const logger = Logger.for('API');
     const port = envReader.readOrElseGet({
         variableName: 'PORT',
         orElse: () => '8080',
     });
 
     app.listen(port, () => {
-        console.log(`API is now listening on port ${port} 🚀`);
+        logger.info(`API is now listening on port ${port} 🚀`);
     }).on('error', (err) => {
-        console.log(`Failed to start API: ${err}`);
+        logger.error(`Failed to start API: ${err}`);
     });
 };

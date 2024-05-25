@@ -18,7 +18,7 @@ export class Logger implements ILogger {
         this.timeProvider = () => new UTCDate();
     }
 
-    public static For(context: string): Logger {
+    public static for(context: string): Logger {
         if (Logger.instances.has(context)) {
             return Logger.instances.get(context)!;
         }
