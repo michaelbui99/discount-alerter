@@ -6,6 +6,11 @@ providers:
               STORE_IDS:
                   - ID1
                   - ID2
+channels:
+    configurations:
+        - channel: '@michaelbui99-discount-alerter/discord-channel'
+          config:
+              webhook: WEB_HOOK
 server:
     port: 8080
 
