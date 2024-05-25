@@ -19,7 +19,7 @@ export class Notifier {
         this.channelMap = new Map<string, NotificationChannel>();
 
         configurations.forEach((config) => {
-            if (this.configMap.has(config.provider)) {
+            if (this.configMap.has(config.channel)) {
                 throw new Error(
                     `Notification Channel with id ${config.channel} has been configured multiple times.`,
                 );
