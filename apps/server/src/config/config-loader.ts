@@ -3,14 +3,22 @@ import path from 'path';
 import os from 'os';
 import fs from 'fs';
 import yaml from 'yaml';
+import { EnvironmentVariableReader } from '../env-reader/environment-variable-reader';
 
 export class ConfigLoader {
     private readonly DEFAULT_CONFIG_PATH = `${os.homedir()}/.discount-alerter/app-config.yaml`;
-    constructor() {}
+    private readonly reader: EnvironmentVariableReader;
+    constructor() {
+        this.reader = new EnvironmentVariableReader();
+    }
 
     public async load(configPath?: string): Promise<ApplicationConfiguration> {
         const resolvedPath = path.resolve(
-            configPath ?? this.DEFAULT_CONFIG_PATH,
+            configPath ??
+                this.reader.readOrElseGet({
+                    variableName: 'DA_CONFIG',
+                    orElse: () => this.DEFAULT_CONFIG_PATH,
+                }),
         );
         const fileContents = fs.readFileSync(resolvedPath, {
             encoding: 'utf-8',
