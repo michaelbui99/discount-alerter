@@ -1,6 +1,6 @@
 providers:
     configurations:
-        - id: '@michaelbui99-discount-alerter/salling-provider'
+        - provider: '@michaelbui99-discount-alerter/salling-provider'
           config:
               AUTH_TOKEN: TOKEN
               STORE_IDS:
