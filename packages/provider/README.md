@@ -1,8 +1,9 @@
 # Provider
 
 Provider library that exposes the `Provider` base class that all provider's must extend.
-All custom providers must expose an instance of their provider as the default import:
+A `Provider` provides discounts from some external source, e.g. store of specific brand, online shop etc.
 
+All custom providers must expose an instance of their provider as the default import.
 The Provider Loader will ensure that the provider has access to its configuration by invoking init with the parsed configurations.
 
 ```typescript
