@@ -12,6 +12,9 @@ export type ApplicationConfiguration = {
     providers: {
         configurations: ProviderConfiguration[];
     };
+    channels: {
+        configurations: NotificationChannelConfiguration[];
+    };
     server: {
         port: number;
     };
