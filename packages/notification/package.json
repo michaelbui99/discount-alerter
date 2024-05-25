@@ -1,5 +1,5 @@
 {
-    "name": "@michaelbui99-discount-alerter/provider",
+    "name": "@michaelbui99-discount-alerter/notification",
     "version": "0.1.0",
     "description": "",
     "main": "src/index.js",

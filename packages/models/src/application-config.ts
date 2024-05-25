@@ -3,6 +3,11 @@ export type ProviderConfiguration = {
     config: Map<string, any>;
 };
 
+export type NotificationChannelConfiguration = {
+    channel: string;
+    config: Map<string, any>;
+};
+
 export type ApplicationConfiguration = {
     providers: {
         configurations: ProviderConfiguration[];
