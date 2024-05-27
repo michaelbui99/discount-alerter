@@ -31,21 +31,21 @@ export class Logger implements ILogger {
     // TODO: Add a way to hook into structured message handling
 
     info(s: string): void {
-        console.log(this.getMessage(s, 'INFO').toString());
+        console.log(this.createMessage(s, 'INFO').toString());
     }
     error(s: string): void {
-        console.error(this.getMessage(s, 'ERROR').toString());
+        console.error(this.createMessage(s, 'ERROR').toString());
     }
     warn(s: string): void {
-        console.warn(this.getMessage(s, 'WARN').toString());
+        console.warn(this.createMessage(s, 'WARN').toString());
     }
     debug(s: string): void {
         if (process.env['DEBUG']) {
-            console.warn(this.getMessage(s, 'DEBUG').toString());
+            console.warn(this.createMessage(s, 'DEBUG').toString());
         }
     }
 
-    private getMessage(message: string, level: string) {
+    private createMessage(message: string, level: string) {
         return new LogMessage({
             context: this.context,
             level: level,
