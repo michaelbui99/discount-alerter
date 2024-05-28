@@ -1,3 +1,23 @@
+import {
+    EqualsExpression,
+    GreaterThanExpression,
+    IncludesExpression,
+    JsonExpression,
+    LessThanExpression,
+    NotExpression,
+} from './expression';
+import { FieldSelector } from './field-selector';
+
+type Operator =
+    | '=='
+    | '!='
+    | '>='
+    | '<='
+    | '>'
+    | '<'
+    | 'INCLUDES'
+    | 'NOT_INCLUDES';
+
 const operatorMap = new Map<string, boolean>([
     ['==', true],
     ['!=', true],
@@ -25,8 +45,13 @@ export type Token = {
 export class JsonExpressionScanner {
     private source: string;
 
-    constructor(source: string) {
-        this.source = source;
+    constructor(source?: string) {
+        this.source = source ?? '';
+    }
+
+    public setSource(newSource: string): JsonExpressionScanner {
+        this.source = newSource;
+        return this;
     }
 
     public scanAll(): Token[] {
@@ -91,5 +116,130 @@ export class JsonExpressionScanner {
             (s.startsWith("'") && s.endsWith("'")) ||
             (s.startsWith('"') && s.endsWith('"'))
         );
+    }
+}
+
+export class JsonExpressionParser {
+    private readonly scanner: JsonExpressionScanner;
+
+    constructor(scanner: JsonExpressionScanner) {
+        this.scanner = scanner;
+    }
+
+    public parse(source: string): JsonExpression {
+        const tokens = this.scanner.setSource(source).scanAll();
+        if (tokens.length !== 3) {
+            throw new Error(
+                `Expected <SELECTOR> <OPERATOR> <GUARD> - got ${JSON.stringify(
+                    tokens,
+                    null,
+                    4,
+                )}`,
+            );
+        }
+
+        const selector = this.parseSelector(tokens[0]);
+        if (!operatorMap.has(tokens[1].literal)) {
+            throw new Error(
+                `unable to parse expression: unknown operator ${tokens[1].literal}`,
+            );
+        }
+        const operator: Operator = tokens[1].literal as Operator;
+        const guard = tokens[2].literal;
+        let expression: JsonExpression;
+        switch (operator) {
+            case '!=': {
+                expression = new NotExpression({
+                    guard: new EqualsExpression({
+                        guard: guard,
+                        selector: selector,
+                        options: new Map<string, any>([
+                            ['CASE_INSENSITIVE', true],
+                        ]),
+                    }),
+                    selector,
+                });
+                break;
+            }
+            case '<': {
+                expression = new LessThanExpression({
+                    guard,
+                    selector,
+                });
+                break;
+            }
+            case '<=': {
+                expression = new LessThanExpression({
+                    guard,
+                    selector,
+                    options: new Map<string, any>([['ACCEPT_EQUAL', true]]),
+                });
+                break;
+            }
+            case '==': {
+                expression = new EqualsExpression({
+                    guard,
+                    selector,
+                    options: new Map<string, any>([['CASE_INSENSITIVE', true]]),
+                });
+                break;
+            }
+            case '>': {
+                expression = new GreaterThanExpression({
+                    guard,
+                    selector,
+                });
+                break;
+            }
+            case '>=': {
+                expression = new GreaterThanExpression({
+                    guard,
+                    selector,
+                    options: new Map<string, any>([['ACCEPT_EQUAL', true]]),
+                });
+                break;
+            }
+            case 'INCLUDES': {
+                expression = new IncludesExpression({
+                    guard,
+                    selector,
+                    options: new Map<string, any>([['CASE_INSENSITIVE', true]]),
+                });
+                break;
+            }
+            case 'NOT_INCLUDES': {
+                expression = new NotExpression({
+                    selector,
+                    guard: new IncludesExpression({
+                        guard,
+                        selector,
+                        options: new Map<string, any>([
+                            ['CASE_INSENSITIVE', true],
+                        ]),
+                    }),
+                });
+                break;
+            }
+            default: {
+                throw new Error(
+                    `Unable to parse expression: unknown operator ${operator}`,
+                );
+            }
+        }
+
+        return expression;
+    }
+
+    private parseSelector(token: Token): FieldSelector {
+        this.acceptType(TokenType.SELECTOR, token);
+        return new FieldSelector(token.literal);
+    }
+
+    private acceptType(type: TokenType, token: Token): void {
+        if (token.type !== type) {
+            throw new Error(
+                `Expected type ${type}, but received ${token.type}`,
+            );
+        }
     }
 }

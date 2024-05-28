@@ -3,7 +3,7 @@ import { FieldSelector } from './field-selector';
 export type JsonExpressionProps = {
     selector: FieldSelector;
     guard: any;
-    options: Map<string, any>;
+    options?: Map<string, any>;
 };
 
 export abstract class JsonExpression {
@@ -14,7 +14,7 @@ export abstract class JsonExpression {
     constructor(props: JsonExpressionProps) {
         this.selector = props.selector;
         this.guard = props.guard;
-        this.options = props.options;
+        this.options = props.options ?? new Map<string, any>();
     }
 
     abstract get expressionName(): string;
@@ -115,13 +115,31 @@ export class EqualsExpression extends JsonExpression {
         const caseInsensitive =
             (this.options.get('CASE_INSENSITIVE') as boolean) ?? false;
 
-        if (caseInsensitive) {
-            return (
-                (value as string).toLowerCase() ===
-                (this.guard as string).toLowerCase()
-            );
+        if (typeof value === 'number') {
+            return Number(value) === Number(this.guard);
+        }
+
+        if (typeof value === 'string') {
+            return caseInsensitive
+                ? `${value}`.toLowerCase() === `${this.guard}`.toLowerCase()
+                : `${value}` === `${this.guard}`;
         }
 
         return (value as any) === (this.guard as any);
+    }
+}
+
+export class NotExpression extends JsonExpression {
+    constructor(props: JsonExpressionProps) {
+        super(props);
+    }
+
+    get expressionName(): string {
+        const guard = this.guard as JsonExpression;
+        return `NOT_${guard.expressionName}`;
+    }
+    evaluate(obj: object): boolean {
+        const guard = this.guard as JsonExpression;
+        return !guard.evaluate(obj);
     }
 }
