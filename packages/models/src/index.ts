@@ -5,3 +5,4 @@ export * from './store';
 export * from './application-config';
 export * from './json-expression';
 export * from './logging';
+export * from './alert';
