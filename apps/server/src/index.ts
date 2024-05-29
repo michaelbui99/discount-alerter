@@ -17,7 +17,7 @@ async function main() {
     const config = await loadConfig();
     const providerManager = await setupProviders(config);
 
-    await startApiServer(providerManager, config);
+    await startApiServer(config, providerManager);
 }
 
 async function loadConfig(): Promise<ApplicationConfiguration> {

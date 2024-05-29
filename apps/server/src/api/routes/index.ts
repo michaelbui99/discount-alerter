@@ -1,7 +1,23 @@
 import { Router } from 'express';
-import { configRouter } from './config';
+import { initConfigRouter } from './config';
+import { initProviderRouter } from './providers';
+// import { configRouter } from './config';
+// import { providerRouter } from './providers';
 
-const router = Router();
-router.use('/config', configRouter);
+export function initAppRouter(): Router {
+    const router = Router();
 
-export const appRouter = router;
+    const configRouter = initConfigRouter();
+    router.use('/config', configRouter);
+
+    const providerRouter = initProviderRouter();
+    router.use('/providers', providerRouter);
+
+    return router;
+}
+
+// const router = Router();
+// router.use('/config', configRouter);
+// router.use('/providers', providerRouter);
+
+// export const appRouter = router;

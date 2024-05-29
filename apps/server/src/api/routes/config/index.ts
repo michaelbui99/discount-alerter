@@ -1,10 +1,19 @@
 import { Router } from 'express';
 import { ConfigController } from '../../../api/controllers';
 
-const controller = new ConfigController();
-const router = Router();
+export function initConfigRouter(): Router {
+    const controller = new ConfigController();
+    const router = Router();
 
-router.get('/', controller.get());
+    router.get('/', controller.get());
 
-export const configRouter = router;
-export const configController = controller;
+    return router;
+}
+
+// const controller = new ConfigController();
+// const router = Router();
+
+// router.get('/', controller.get());
+
+// export const configRouter = router;
+// export const configController = controller;
