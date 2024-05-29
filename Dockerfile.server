@@ -4,9 +4,16 @@ COPY apps /app/apps
 COPY packages /app/packages
 COPY ./package*.json /app/
 COPY app-config.yaml /.discount-alerter/app-config.yaml
+
 RUN npm ci
 RUN npm run build
+
+RUN mkdir -p /.discount-alerter/providers
+
+ENV DA_PORT=8080
 ENV DA_CONFIG=/.discount-alerter/app-config.yaml
+ENV DA_PROVIDER_DIR=/.discount-alerter/providers
+
 EXPOSE 8080
 ENTRYPOINT [ "node" ]
 CMD [ "/app/apps/server/dist/index.js"]

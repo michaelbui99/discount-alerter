@@ -4,7 +4,11 @@ import { appRouter } from './routes';
 import { EnvironmentVariableReader } from '../env-reader/environment-variable-reader';
 import { Response, Request } from './typedefs';
 import { logging } from './middleware/logging';
-import { Logger } from '@michaelbui99-discount-alerter/models';
+import {
+    ApplicationConfiguration,
+    Logger,
+} from '@michaelbui99-discount-alerter/models';
+import { ProviderManager } from '@michaelbui99-discount-alerter/provider';
 
 const envReader = new EnvironmentVariableReader();
 const app = express();
@@ -22,11 +26,14 @@ app.get('/', (req: Request, res: Response) => {
     res.json({ apiVersions: [{ version: 'v1', root: '/api/v1' }] });
 });
 
-export const startApiServer = async () => {
+export const startApiServer = async (
+    providerManager: ProviderManager,
+    config: ApplicationConfiguration,
+) => {
     const logger = Logger.for('API');
     const port = envReader.readOrElseGet({
-        variableName: 'PORT',
-        orElse: () => '8080',
+        variableName: 'DA_PORT',
+        orElse: () => `${config.server.port}` ?? '8080',
     });
 
     app.listen(port, () => {

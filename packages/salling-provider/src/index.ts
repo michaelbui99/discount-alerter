@@ -25,8 +25,8 @@ class SallingProvider extends Provider {
     }
 
     public init(config: ProviderConfiguration): void {
-        this.authToken = config.config.get('AUTH_TOKEN');
-        this.stores = config.config.get('STORE_IDS');
+        this.authToken = config.config['AUTH_TOKEN'];
+        this.stores = config.config['STORE_IDS'];
 
         this.apiClient = createSallingGroupAPIClient(this.authToken);
     }

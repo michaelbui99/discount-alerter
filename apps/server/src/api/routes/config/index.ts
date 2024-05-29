@@ -7,3 +7,4 @@ const router = Router();
 router.get('/', controller.get());
 
 export const configRouter = router;
+export const configController = controller;

@@ -1,6 +1,6 @@
 export type ProviderConfiguration = {
     provider: string;
-    config: Map<string, any>;
+    config: { [key: string]: any };
 };
 
 export type NotificationChannelConfiguration = {
