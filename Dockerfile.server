@@ -16,7 +16,7 @@ ENV DA_PROVIDER_DIR=/.discount-alerter/providers
 
 EXPOSE 8080
 ENTRYPOINT [ "node" ]
-CMD [ "/app/apps/server/dist/index.js"]
+CMD [ "--require", "/app/apps/server/dist/instrumentation.js" ,"/app/apps/server/dist/index.js"]
 
 # FROM node:20.10.0 
 # WORKDIR /app
