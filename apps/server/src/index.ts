@@ -12,10 +12,17 @@ import {
 } from '@michaelbui99-discount-alerter/models';
 import sallingProvider from '@michaelbui99-discount-alerter/salling-provider';
 import { EnvironmentVariableReader } from './env-reader/environment-variable-reader';
+import { ITracker, Tracker } from './tracker/tracker';
 
 async function main() {
     const config = await loadConfig();
     const providerManager = await setupProviders(config);
+    const tracker: ITracker = new Tracker(
+        config.tracker.trackSchedule,
+        providerManager.listEnabled(),
+        [],
+    );
+    await tracker.start();
 
     await startApiServer(config, providerManager);
 }

@@ -39,7 +39,7 @@ export class StorageLoader {
         }
 
         this.storageIdMap[storage.getId()] = true;
-        this.storagePlugins.push(provider);
+        this.storagePlugins.push(storage);
 
         return this;
     }
@@ -49,25 +49,25 @@ export class StorageLoader {
         return this;
     }
 
-    public async load(): Promise<Provider[]> {
+    public async load(): Promise<Storage[]> {
         await Promise.all(
             this.storagePluginDirs.map((dirPath) =>
                 this.loadDirectory(dirPath),
             ),
         );
 
-        this.storagePlugins.forEach((provider) => {
-            if (!this.configMap.has(provider.getId())) {
+        this.storagePlugins.forEach((storage) => {
+            if (!this.configMap.has(storage.getId())) {
                 console.warn(
-                    `No configurations found for provider ${provider.getId()}`,
+                    `No configurations found for storage ${storage.getId()}`,
                 );
             }
 
-            const config = this.configMap.get(provider.getId()) ?? {
-                provider: provider.getId(),
+            const config = this.configMap.get(storage.getId()) ?? {
+                storage: storage.getId(),
                 config: new Map<string, any>(),
             };
-            provider.init(config);
+            storage.init(config);
         });
 
         return this.storagePlugins;

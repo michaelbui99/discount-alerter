@@ -11,13 +11,13 @@ import { initAppRouter } from './routes';
 import { ProviderController } from './controllers/provider';
 import { ProviderManager } from '@michaelbui99-discount-alerter/provider';
 
-const envReader = new EnvironmentVariableReader();
-const app = express();
-
 export const startApiServer = async (
     config: ApplicationConfiguration,
     providerManager: ProviderManager,
 ) => {
+    const envReader = new EnvironmentVariableReader();
+    const app = express();
+
     const logger = Logger.for('API');
     const port = envReader.readOrElseGet({
         variableName: 'DA_PORT',
