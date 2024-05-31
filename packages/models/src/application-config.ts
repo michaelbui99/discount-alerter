@@ -5,7 +5,12 @@ export type ProviderConfiguration = {
 
 export type NotificationChannelConfiguration = {
     channel: string;
-    config: Map<string, any>;
+    config: { [key: string]: any };
+};
+
+export type StorageConfiguration = {
+    storage: string;
+    config: { [key: string]: any };
 };
 
 export type ApplicationConfiguration = {

@@ -1,8 +1,6 @@
 import { Router } from 'express';
 import { initConfigRouter } from './config';
 import { initProviderRouter } from './providers';
-// import { configRouter } from './config';
-// import { providerRouter } from './providers';
 
 export function initAppRouter(): Router {
     const router = Router();
@@ -15,9 +13,3 @@ export function initAppRouter(): Router {
 
     return router;
 }
-
-// const router = Router();
-// router.use('/config', configRouter);
-// router.use('/providers', providerRouter);
-
-// export const appRouter = router;

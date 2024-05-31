@@ -1,5 +1,5 @@
 {
-    "name": "@michaelbui99-discount-alerter/models",
+    "name": "@michaelbui99-discount-alerter/storage",
     "version": "0.1.0",
     "description": "",
     "main": "src/index.js",
@@ -8,18 +8,16 @@
         "build": "tsc --build",
         "clean": "tsc --build --clean",
         "pretest": "npm run clean && npm run build",
-        "test": "jest"
-    },
-    "dependencies": {
-        "date-fns": "^3.6.0",
-        "typescript": "^5.4.5",
-        "uuid": "^9.0.1"
+        "test": "jest --config ./jest.config.js"
     },
     "author": "",
     "license": "MIT",
+    "dependencies": {
+        "typescript": "^5.4.5",
+        "@michaelbui99-discount-alerter/models": "^0.1.0"
+    },
     "devDependencies": {
         "@types/jest": "^29.5.12",
-        "@types/uuid": "^9.0.8",
         "jest": "^29.7.0",
         "ts-jest": "^29.1.3"
     }

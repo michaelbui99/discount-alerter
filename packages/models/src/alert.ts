@@ -8,14 +8,15 @@ export class Alert {
     private readonly expressionParser: JsonExpressionParser;
 
     constructor(
-        conditionsEvaluationContext: 'EVERY' | 'SOME',
+        conditionsEvaluationContext?: 'EVERY' | 'SOME',
         conditions?: string[],
         notificationChannelIds?: string[],
     ) {
         this.expressionParser = new JsonExpressionParser(
             new JsonExpressionScanner(),
         );
-        this.conditionsEvaluationContext = conditionsEvaluationContext;
+        this.conditionsEvaluationContext =
+            conditionsEvaluationContext ?? 'EVERY';
         this.conditions = conditions ?? [];
         this.notificationChannelIds = notificationChannelIds ?? [];
     }
