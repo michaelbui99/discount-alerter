@@ -10,10 +10,13 @@ import {
 import { initAppRouter } from './routes';
 import { ProviderController } from './controllers/provider';
 import { ProviderManager } from '@michaelbui99-discount-alerter/provider';
+import { StorageManager } from '@michaelbui99-discount-alerter/storage';
+import { StorageController } from './controllers';
 
 export const startApiServer = async (
     config: ApplicationConfiguration,
     providerManager: ProviderManager,
+    storageManager: StorageManager,
 ) => {
     const envReader = new EnvironmentVariableReader();
     const app = express();
@@ -25,6 +28,7 @@ export const startApiServer = async (
     });
 
     ProviderController.$inject({ providerManager });
+    StorageController.$inject({ storageManager });
 
     // Middlewares
     app.use(cors());

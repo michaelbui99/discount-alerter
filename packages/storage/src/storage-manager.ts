@@ -8,6 +8,7 @@ export interface IStorageManager {
 export class StorageManager implements IStorageManager {
     private readonly appConfig: ApplicationConfiguration;
     private readonly storageMap: { [id: string]: Storage | undefined };
+    private readonly storage: Storage[];
 
     constructor(storage: Storage[], appConfig: ApplicationConfiguration) {
         this.appConfig = appConfig;
@@ -16,8 +17,12 @@ export class StorageManager implements IStorageManager {
             sMap[next.getId()] = next;
             return sMap;
         }, initMap);
+        this.storage = storage;
     }
 
+    public getAll(): Storage[] {
+        return this.storage;
+    }
     public getResolvedStorage(): Storage {
         const fallbackStorage =
             '@michelbui99-discount-alerter/in-memory-storage';

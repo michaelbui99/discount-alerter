@@ -65,6 +65,9 @@ export class ProviderController {
     }
 
     public static $inject(injection: { providerManager: ProviderManager }) {
-        ProviderController.$injected = injection;
+        ProviderController.$injected = {
+            ...ProviderController.$injected,
+            ...injection,
+        };
     }
 }

@@ -13,10 +13,17 @@ import {
 import sallingProvider from '@michaelbui99-discount-alerter/salling-provider';
 import { EnvironmentVariableReader } from './env-reader/environment-variable-reader';
 import { ITracker, Tracker } from './tracker/tracker';
+import {
+    InMemoryStorage,
+    Storage,
+    StorageLoader,
+    StorageManager,
+} from '@michaelbui99-discount-alerter/storage';
 
 async function main() {
     const config = await loadConfig();
     const providerManager = await setupProviders(config);
+    const storageManager = await setupStorage(config);
     const tracker: ITracker = new Tracker(
         config.tracker.trackSchedule,
         providerManager.listEnabled(),
@@ -24,7 +31,7 @@ async function main() {
     );
     await tracker.start();
 
-    await startApiServer(config, providerManager);
+    await startApiServer(config, providerManager, storageManager);
 }
 
 async function loadConfig(): Promise<ApplicationConfiguration> {
@@ -62,6 +69,30 @@ async function setupProviders(
     logger.info(`${providers.length} provider(s) has been loaded.`);
 
     return new ProviderManager(providers);
+}
+
+async function setupStorage(
+    config: ApplicationConfiguration,
+): Promise<StorageManager> {
+    const loader = new StorageLoader(config.storage.configurations);
+
+    const envReader = new EnvironmentVariableReader();
+    const storagePluginsDir = envReader.readOrElseGet({
+        variableName: 'DA_STORAGE_PLUGINS_DIR',
+        orElse: () => `${os.homedir()}/.discount-alerter/storage-plugins`,
+    });
+
+    loader.registerProviderDir(path.resolve(storagePluginsDir));
+
+    const includedStorage = [new InMemoryStorage()];
+    includedStorage.forEach((storage) => loader.registerStorage(storage));
+
+    const storage: Storage[] = await loader.load();
+
+    const logger = Logger.for('API');
+    logger.info(`${storage.length} storage plugins has been loaded`);
+
+    return new StorageManager(storage, config);
 }
 
 main();
