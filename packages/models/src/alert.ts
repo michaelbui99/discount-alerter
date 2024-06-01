@@ -2,6 +2,7 @@ import { Discount } from './discount';
 import { JsonExpressionParser, JsonExpressionScanner } from './json-expression';
 
 export class Alert {
+    id: string;
     readonly conditions: string[];
     readonly conditionsEvaluationContext: 'EVERY' | 'SOME';
     readonly notificationChannelIds: string[];

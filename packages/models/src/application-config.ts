@@ -17,12 +17,20 @@ export type ApplicationConfiguration = {
     providers: {
         configurations: ProviderConfiguration[];
     };
+
     channels: {
         configurations: NotificationChannelConfiguration[];
     };
+
+    storage: {
+        use: string;
+        configurations: StorageConfiguration[];
+    };
+
     server: {
         port: number;
     };
+
     tracker: {
         trackSchedule: string;
     };

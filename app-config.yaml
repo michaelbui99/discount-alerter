@@ -11,6 +11,20 @@ channels:
         - channel: '@michaelbui99-discount-alerter/discord-channel'
           config:
               webhook: WEB_HOOK
+storage:
+    use: '@michaelbui99-discount-alerter/postgres-storage'
+    configurations:
+        - storage: '@michaelbui99-discount-alerter/postgres-storage'
+          config:
+              db: 'postgres'
+              host: 'http://localhost'
+              port: '5432'
+              user: 'postgres'
+              password: 'postgres'
+        - storage: '@michaelbui99-discount-alerter/in-memory-storage'
+          config:
+              foo: 'bar'
+
 server:
     port: 8080
 
