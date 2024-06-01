@@ -1,7 +1,7 @@
 import { StorageManager } from '@michaelbui99-discount-alerter/storage';
 import { Request, Response } from '../typedefs';
 import { ApiResponse } from '../dtos/api-response';
-import { CreateAlertDto, UpdateAlertDto } from '../dtos/create-alert-dto';
+import { CreateAlertDto, UpdateAlertDto } from '../dtos/alert-dtos';
 import { Alert } from '@michaelbui99-discount-alerter/models';
 import { v4 as uuidv4 } from 'uuid';
 
