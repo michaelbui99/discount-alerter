@@ -6,8 +6,8 @@ import {
 import { Storage } from './storage';
 
 export class InMemoryStorage extends Storage {
-    private alerts: Alert[];
     private discounts: Discount[];
+    private alertsMap: { [id: string]: Alert | undefined };
 
     constructor() {
         super(
@@ -19,25 +19,52 @@ export class InMemoryStorage extends Storage {
 
     public init(config: StorageConfiguration): void {}
     public async ensureInitialized(): Promise<void> {
-        if (!this.alerts) {
-            this.alerts = [];
-        }
-
         if (!this.discounts) {
             this.discounts = [];
         }
+
+        if (!this.alertsMap) {
+            this.alertsMap = {};
+        }
     }
     public async storeAlert(alert: Alert): Promise<Alert> {
-        this.alerts.push(alert);
+        this.alertsMap[alert.id] = alert;
         return alert;
     }
+
     public async getAlerts(): Promise<Alert[]> {
-        return this.alerts;
+        let alerts = [] as Alert[];
+        for (let id of Object.keys(this.alertsMap)) {
+            alerts.push(this.alertsMap[id]!);
+        }
+
+        return alerts;
     }
+
+    public async updateAlert(id: string, entity: Alert): Promise<Alert> {
+        if (!this.alertsMap[id]) {
+            throw new Error(`Alert ${id} does not exist`);
+        }
+
+        this.alertsMap[id] = entity;
+        return entity;
+    }
+
+    public async deleteAlert(id: string): Promise<Alert> {
+        if (!this.alertsMap[id]) {
+            throw new Error(`Alert ${id} does not exist`);
+        }
+
+        const entity = JSON.parse(JSON.stringify(this.alertsMap[id]!)) as Alert;
+        delete this.alertsMap[id];
+        return entity;
+    }
+
     public async storeDiscount(discount: Discount): Promise<Discount> {
         this.discounts.push(discount);
         return discount;
     }
+
     public async getDiscounts(): Promise<Discount[]> {
         return this.discounts;
     }

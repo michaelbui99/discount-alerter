@@ -31,6 +31,8 @@ export abstract class Storage {
     public abstract ensureInitialized(): Promise<void>;
     public abstract storeAlert(alert: Alert): Promise<Alert>;
     public abstract getAlerts(): Promise<Alert[]>;
+    public abstract updateAlert(id: string, entity: Alert): Promise<Alert>;
+    public abstract deleteAlert(id: string): Promise<Alert>;
     public abstract storeDiscount(discount: Discount): Promise<Discount>;
     public abstract getDiscounts(): Promise<Discount[]>;
 
