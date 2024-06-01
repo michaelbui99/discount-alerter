@@ -11,7 +11,7 @@ import { initAppRouter } from './routes';
 import { ProviderController } from './controllers/provider';
 import { ProviderManager } from '@michaelbui99-discount-alerter/provider';
 import { StorageManager } from '@michaelbui99-discount-alerter/storage';
-import { StorageController } from './controllers';
+import { AlertsController, StorageController } from './controllers';
 
 export const startApiServer = async (
     config: ApplicationConfiguration,
@@ -27,8 +27,10 @@ export const startApiServer = async (
         orElse: () => `${config.server.port}` ?? '8080',
     });
 
+    // Inject dependencies to controllers
     ProviderController.$inject({ providerManager });
     StorageController.$inject({ storageManager });
+    AlertsController.$inject({ storageManager });
 
     // Middlewares
     app.use(cors());

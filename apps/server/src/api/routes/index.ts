@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { initConfigRouter } from './config';
 import { initProviderRouter } from './providers';
 import { initStorageRouter } from './storage';
+import { initAlertsRouter } from './alerts';
 
 export function initAppRouter(): Router {
     const router = Router();
@@ -14,6 +15,9 @@ export function initAppRouter(): Router {
 
     const storageRouter = initStorageRouter();
     router.use('/storage', storageRouter);
+
+    const alertsRouter = initAlertsRouter();
+    router.use('/alerts', alertsRouter);
 
     return router;
 }

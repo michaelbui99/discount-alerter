@@ -1,45 +1,80 @@
 import { Provider } from '@michaelbui99-discount-alerter/provider';
-import { Alert, ILogger, Logger } from '@michaelbui99-discount-alerter/models';
+import {
+    Discount,
+    ILogger,
+    Logger,
+} from '@michaelbui99-discount-alerter/models';
 import { CronJob } from 'cron';
+import { StorageManager } from '@michaelbui99-discount-alerter/storage';
 
 export interface ITracker {
     start(): Promise<void>;
     stop(): Promise<void>;
     restart(): Promise<void>;
-    getNext(): Promise<number>;
-    setAlerts(alerts: Alert[]): Promise<void>;
     setProviders(providers: Provider[]): Promise<void>;
     setSchedule(schedule: string): Promise<void>;
 }
 
 export class Tracker implements ITracker {
-    private job: CronJob;
+    private job: CronJob | undefined;
     private schedule: string;
     private providers: Provider[];
-    private alerts: Alert[];
+    private storageManager: StorageManager;
     private readonly logger: ILogger;
 
-    constructor(schedule: string, providers: Provider[], alerts: Alert[]) {
+    constructor(
+        schedule: string,
+        providers: Provider[],
+        storageManager: StorageManager,
+    ) {
         this.logger = Logger.for('TRACKER');
         this.schedule = schedule;
         this.providers = providers;
-        this.alerts = alerts;
+        this.storageManager = storageManager;
     }
 
     public async start(): Promise<void> {
         this.logger.info('Starting tracker...');
-        this.job = new CronJob(this.schedule, () => {
-            this.logger.info('TRIGGERED');
+        this.job = new CronJob(this.schedule, async () => {
+            this.logger.info('Scanning for discounts...');
+            const storage = this.storageManager.getResolvedStorage();
+            await storage.ensureInitialized();
+
+            const discountsPromises: Promise<Discount[]>[] = [];
+            this.providers.forEach((provider) => {
+                discountsPromises.push(provider.getDiscounts());
+            });
+            const awaitedDiscounts = await Promise.all(discountsPromises);
+            let discounts: Discount[] = [];
+            for (let discountArr of awaitedDiscounts) {
+                discounts = discounts.concat(discountArr);
+            }
+
+            const alerts = await storage.getAlerts();
+
+            this.logger.info('Testing alerts...');
+            for (let discount of discounts) {
+                for (let alert of alerts) {
+                    if (alert.shouldTrigger(discount)) {
+                        this.logger.info(
+                            `NOTIFY ${JSON.stringify(discount, null, 4)}`,
+                        );
+                    }
+                }
+            }
         });
         this.job.start();
         console.log(this.job);
         console.log(this.providers);
-        console.log(this.alerts);
         this.logger.info('Tracker started.');
     }
 
     public async stop(): Promise<void> {
         this.logger.info('Stopping tracker...');
+        if (this.job) {
+            this.job.stop();
+            this.job = undefined;
+        }
         this.logger.info('Tracker stopped.');
     }
 
@@ -48,14 +83,6 @@ export class Tracker implements ITracker {
         await this.stop();
         await this.start();
         this.logger.info('Tracker restarted.');
-    }
-
-    getNext(): Promise<number> {
-        throw new Error('Method not implemented.');
-    }
-
-    setAlerts(alerts: Alert[]): Promise<void> {
-        throw new Error('Method not implemented.');
     }
 
     public async setProviders(providers: Provider[]): Promise<void> {

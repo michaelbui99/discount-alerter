@@ -27,7 +27,7 @@ async function main() {
     const tracker: ITracker = new Tracker(
         config.tracker.trackSchedule,
         providerManager.listEnabled(),
-        [],
+        storageManager,
     );
     await tracker.start();
 
