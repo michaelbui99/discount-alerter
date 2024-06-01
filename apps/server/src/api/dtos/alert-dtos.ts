@@ -3,3 +3,5 @@ export type CreateAlertDto = {
     conditionsEvaluationContext: 'EVERY' | 'SOME';
     notificationChannelIds: string[];
 };
+
+export type UpdateAlertDto = CreateAlertDto;
