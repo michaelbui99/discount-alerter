@@ -19,18 +19,22 @@ import {
     StorageLoader,
     StorageManager,
 } from '@michaelbui99-discount-alerter/storage';
+import { Notifier } from '@michaelbui99-discount-alerter/notification';
+import discordNotificationChannel from '@michaelbui99-discount-alerter/discord-notification-channel';
 
 async function main() {
     const config = await loadConfig();
     const providerManager = await setupProviders(config);
     const storageManager = await setupStorage(config);
+    const notifier = await setupNotificationChannels(config);
     const tracker: ITracker = new Tracker(
         config.tracker.trackSchedule,
         providerManager.listEnabled(),
         storageManager,
+        notifier,
     );
-    await tracker.start();
 
+    await tracker.start();
     await startApiServer(config, providerManager, storageManager);
 }
 
@@ -93,6 +97,25 @@ async function setupStorage(
     logger.info(`${storage.length} storage plugins has been loaded`);
 
     return new StorageManager(storage, config);
+}
+
+async function setupNotificationChannels(
+    config: ApplicationConfiguration,
+): Promise<Notifier> {
+    const notifier = new Notifier(config.channels.configurations);
+
+    const envReader = new EnvironmentVariableReader();
+    const notificationChannelsDir = envReader.readOrElseGet({
+        variableName: 'DA_NOTIFICATION_CHANNELS_DIR',
+        orElse: () => `${os.homedir()}/.discount-alerter/notification-channels`,
+    });
+
+    notifier.registerChannelDir(notificationChannelsDir);
+    notifier.registerChannel(discordNotificationChannel);
+
+    await notifier.loadChannels();
+
+    return notifier;
 }
 
 main();

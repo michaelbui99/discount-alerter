@@ -17,6 +17,8 @@ export class Notifier {
         this.configMap = new Map<string, NotificationChannelConfiguration>();
         this.idMap = new Map<string, boolean>();
         this.channelMap = new Map<string, NotificationChannel>();
+        this.channelDirs = [];
+        this.channels = [];
 
         configurations.forEach((config) => {
             if (this.configMap.has(config.channel)) {
@@ -27,6 +29,10 @@ export class Notifier {
 
             this.configMap.set(config.channel, config);
         });
+    }
+
+    public getChannels(): NotificationChannel[] {
+        return this.channels;
     }
 
     public async notify(
@@ -42,6 +48,8 @@ export class Notifier {
             }
 
             targetChannel = this.channelMap.get(channel)!;
+        } else {
+            targetChannel = channel;
         }
 
         const config = this.configMap.get(targetChannel!.getId()) ?? {

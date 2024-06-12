@@ -1,0 +1,19 @@
+{
+    "name": "@michaelbui99-discount-alerter/discord-notification-channel",
+    "version": "0.1.0",
+    "description": "",
+    "main": "src/index.js",
+    "types": "src/index.d.ts",
+    "scripts": {
+        "build": "tsc --build",
+        "clean": "tsc --build --clean",
+        "test": "echo ''"
+    },
+    "dependencies": {
+        "typescript": "^5.4.5",
+        "@michaelbui99-discount-alerter/models": "^0.1.0",
+        "@michaelbui99-discount-alerter/notification": "^0.1.0"
+    },
+    "author": "",
+    "license": "MIT"
+}

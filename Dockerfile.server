@@ -10,11 +10,13 @@ RUN npm run build
 
 RUN mkdir -p /.discount-alerter/providers
 RUN mkdir -p /.discount-alerter/storage-plugins
+RUN mkdir -p /.discount-alerter/notification-channels
 
 ENV DA_PORT=8080
 ENV DA_CONFIG=/.discount-alerter/app-config.yaml
 ENV DA_PROVIDER_DIR=/.discount-alerter/providers
 ENV DA_STORAGE_PLUGINS_DIR=/.discount-alerter/storage-plugins
+ENV DA_NOTIFICATION_CHANNELS_DIR=/.discount-alerter/notification-channels
 
 EXPOSE 8080
 ENTRYPOINT [ "node" ]

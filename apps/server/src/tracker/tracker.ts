@@ -6,6 +6,7 @@ import {
 } from '@michaelbui99-discount-alerter/models';
 import { CronJob } from 'cron';
 import { StorageManager } from '@michaelbui99-discount-alerter/storage';
+import { Notifier } from '@michaelbui99-discount-alerter/notification';
 
 export interface ITracker {
     start(): Promise<void>;
@@ -20,17 +21,20 @@ export class Tracker implements ITracker {
     private schedule: string;
     private providers: Provider[];
     private storageManager: StorageManager;
+    private notifier: Notifier;
     private readonly logger: ILogger;
 
     constructor(
         schedule: string,
         providers: Provider[],
         storageManager: StorageManager,
+        notifier: Notifier,
     ) {
         this.logger = Logger.for('TRACKER');
         this.schedule = schedule;
         this.providers = providers;
         this.storageManager = storageManager;
+        this.notifier = notifier;
     }
 
     public async start(): Promise<void> {
@@ -56,16 +60,15 @@ export class Tracker implements ITracker {
             for (let discount of discounts) {
                 for (let alert of alerts) {
                     if (alert.shouldTrigger(discount)) {
-                        this.logger.info(
-                            `NOTIFY ${JSON.stringify(discount, null, 4)}`,
-                        );
+                        const channels = this.notifier.getChannels();
+                        for (let channel of channels) {
+                            await this.notifier.notify(channel, discount);
+                        }
                     }
                 }
             }
         });
         this.job.start();
-        console.log(this.job);
-        console.log(this.providers);
         this.logger.info('Tracker started.');
     }
 

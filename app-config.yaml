@@ -7,9 +7,9 @@ providers:
                   - 67766b50-4cc6-4658-8fc4-a9b2db468f91
 channels:
     configurations:
-        - channel: '@michaelbui99-discount-alerter/discord-channel'
+        - channel: '@michaelbui99-discount-alerter/discord-notification-channel'
           config:
-              webhook: WEB_HOOK
+              WEBHOOK: WEBHOOK
 storage:
     use: '@michaelbui99-discount-alerter/in-memory-storage'
     configurations:
@@ -28,4 +28,4 @@ server:
     port: 8080
 
 tracker:
-    trackSchedule: '* * * * *'
+    trackSchedule: '*/30 * * * *'
