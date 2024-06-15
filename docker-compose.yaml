@@ -1,17 +1,21 @@
 services: 
-  server: 
-    container_name: discount-alerter-server
+  discount_alerter_server: 
+    container_name: discount_alerter_server
     build:
       context: .
       dockerfile: ./Dockerfile.server
     restart: no
     ports:
       - "8080:8080"
-  client:
-    container_name: discount-alerter-client
+  discount_alerter_client:
+    container_name: discount_alerter_client
     build: 
       context: .
       dockerfile: ./Dockerfile.client
     restart: always
     ports:
       - "4200:80"
+
+networks:
+  discount_alerter_network:
+    driver: bridge

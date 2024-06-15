@@ -63,8 +63,10 @@ export class ProviderLoader {
 
             const config = this.configMap.get(provider.getId()) ?? {
                 provider: provider.getId(),
+                enable: true,
                 config: new Map<string, any>(),
             };
+            provider.enabled = config.enable;
             provider.init(config);
         });
 

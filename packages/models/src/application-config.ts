@@ -1,5 +1,6 @@
 export type ProviderConfiguration = {
     provider: string;
+    enable: boolean;
     config: { [key: string]: any };
 };
 

@@ -11,11 +11,9 @@ export interface IProviderManager {
 
 export class ProviderManager implements IProviderManager {
     private providerMap: Map<string, Provider>;
-    private providerEnabled: Map<string, boolean>;
 
     constructor(providers: Provider[]) {
         this.providerMap = new Map<string, Provider>();
-        this.providerEnabled = new Map<string, boolean>();
 
         for (let provider of providers) {
             if (this.providerMap.has(provider.getId())) {
@@ -33,15 +31,14 @@ export class ProviderManager implements IProviderManager {
             }
 
             this.providerMap.set(provider.getId(), provider);
-            this.providerEnabled.set(provider.getId(), true);
         }
     }
 
     listEnabled(): Provider[] {
         const enabled: Provider[] = [];
-        for (let [id, isEnabled] of this.providerEnabled.entries()) {
-            if (isEnabled) {
-                enabled.push(this.providerMap.get(id)!);
+        for (let provider of this.providerMap.values()) {
+            if (provider.enabled) {
+                enabled.push(provider);
             }
         }
 
@@ -50,9 +47,9 @@ export class ProviderManager implements IProviderManager {
 
     listDisabled(): Provider[] {
         const disabled: Provider[] = [];
-        for (let [id, isEnabled] of this.providerEnabled.entries()) {
-            if (!isEnabled) {
-                disabled.push(this.providerMap.get(id)!);
+        for (let provider of this.providerMap.values()) {
+            if (!provider.enabled) {
+                disabled.push(provider);
             }
         }
 
@@ -81,7 +78,7 @@ export class ProviderManager implements IProviderManager {
             return this;
         }
 
-        this.providerEnabled.set(id, true);
+        this.providerMap.get(id)!.enabled = true;
         return this;
     }
 
@@ -90,7 +87,7 @@ export class ProviderManager implements IProviderManager {
             return this;
         }
 
-        this.providerEnabled.set(id, false);
+        this.providerMap.get(id)!.enabled = false;
         return this;
     }
 }

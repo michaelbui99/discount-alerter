@@ -10,11 +10,13 @@ export abstract class Provider {
     protected readonly id: string;
     protected readonly name: string;
     protected readonly version: string;
+    public enabled: boolean;
 
     constructor(id: string, name: string, version: string) {
         this.id = id;
         this.name = name;
         this.version = version;
+        this.enabled = true;
 
         Object.defineProperty(this, PROVIDER_SYMBOL, { value: true });
     }
