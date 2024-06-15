@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ClientConfigService } from './client-config.service';
 import { HttpClient } from '@angular/common/http';
-import { Observable, switchMap } from 'rxjs';
+import { Observable, map, switchMap } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -16,7 +16,7 @@ export class ServerConfigService {
         return this.clientConfigService.getClientConfig().pipe(
             switchMap((clientConfig) => {
                 const url = `${clientConfig.server.url}/api/${clientConfig.server.apiVersion}/config`;
-                return this.http.get(url);
+                return this.http.get(url).pipe(map((res) => (res as any).data));
             }),
         );
     }

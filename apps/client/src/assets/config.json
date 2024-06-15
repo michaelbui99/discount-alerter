@@ -1,6 +1,6 @@
 {
     "server": {
-        "url": "http://discount_alerter_server:8080",
+        "url": "http://localhost:8080",
         "apiVersion": "v1"
     }
 }
