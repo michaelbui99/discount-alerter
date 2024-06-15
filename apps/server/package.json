@@ -3,6 +3,7 @@
     "version": "0.1.0",
     "description": "",
     "main": "dist/index.js",
+    "private": true,
     "scripts": {
         "prestart": "npm run build",
         "start": "node --require .dist/instrumentation.js ./dist/index.js",
