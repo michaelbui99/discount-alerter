@@ -7,3 +7,11 @@ services:
     restart: no
     ports:
       - "8080:8080"
+  client:
+    container_name: discount-alerter-client
+    build: 
+      context: .
+      dockerfile: ./Dockerfile.client
+    restart: always
+    ports:
+      - "4200:80"

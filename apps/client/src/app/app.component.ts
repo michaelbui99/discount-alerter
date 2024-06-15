@@ -4,11 +4,19 @@ import { SharedModule } from './shared/shared.module';
 import { ClientConfigService } from './shared/config/services/client-config.service';
 import { ClientApplicationConfiguration } from './shared/config/model';
 import { CommonModule } from '@angular/common';
+import { ListAlertsComponent } from './list-alerts/pages/list-alerts/list-alerts.component';
+import { NavbarComponent } from './navbar/navbar.component';
 
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [CommonModule, RouterOutlet, SharedModule],
+    imports: [
+        CommonModule,
+        RouterOutlet,
+        SharedModule,
+        ListAlertsComponent,
+        NavbarComponent,
+    ],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss',
 })
