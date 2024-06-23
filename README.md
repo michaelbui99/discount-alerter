@@ -25,7 +25,7 @@ Example of how alerts are stored:
 ```json
 {
     "conditionsEvaluationContext": "EVERY",
-    "conditions": ["offer.currency == \"DKK\"", "offer.percentDiscount"],
+    "conditions": ["offer.currency == \"DKK\"", "offer.percentDiscount > 50"],
     "notificationChannelIds": ["@michaelbui99-discount-alerter/discord-channel"]
 }
 ```
