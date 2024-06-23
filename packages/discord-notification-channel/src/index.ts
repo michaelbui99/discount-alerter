@@ -3,13 +3,16 @@ import {
     NotificationChannelConfiguration,
 } from '@michaelbui99-discount-alerter/models';
 import { NotificationChannel } from '@michaelbui99-discount-alerter/notification';
+import { RateLimiter } from './ratelimiter';
 
 function price(val: number, currency: string): string {
     return `${val} ${currency}`;
 }
 
+const ONE_SECOND = 1000;
 export class DiscordNotificationChannel extends NotificationChannel {
     private webhook: string = '';
+    private rateLimiter: RateLimiter;
 
     constructor() {
         super(
@@ -17,6 +20,8 @@ export class DiscordNotificationChannel extends NotificationChannel {
             'Discord Notification Channel',
             '0.1.0',
         );
+
+        this.rateLimiter = new RateLimiter(50, ONE_SECOND);
     }
 
     public async send(discount: Discount): Promise<void> {
@@ -43,6 +48,13 @@ export class DiscordNotificationChannel extends NotificationChannel {
             username: 'Discount Alerter',
             attachments: [],
         };
+
+        if (!this.rateLimiter.acquire()) {
+            const timeout = new Promise<void>((resolve) => {
+                setTimeout(() => resolve(), ONE_SECOND);
+            });
+            await timeout;
+        }
 
         const res = await fetch(this.webhook, {
             method: 'POST',
